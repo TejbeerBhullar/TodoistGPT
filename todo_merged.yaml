@@ -1,0 +1,4238 @@
+openapi: 3.1.0
+info:
+  title: Todoist_REST_V2
+  summary: Todoist for ChatGPT
+  description: Todoist REST API v2 for ChatGPT Actions
+  termsOfService: https://doist.com/terms-of-service
+  contact:
+    name: Todoist Developer
+    url: https://developer.todoist.com/
+  version: 1.1.0
+  x-definition-date: 2023-11-16
+  x-definition-author: aaddrick
+  x-definition-author-reddit: u/aaddrick
+  x-definition-site: https://github.com/aaddrick/GPT-Actions/blob/main/Todoist/REST/V2/README.md
+servers:
+- url: https://api.todoist.com/rest/v2
+  description: Todoist REST API v2 server URL
+paths:
+  /projects:
+    get:
+      summary: Get all projects
+      description: 'Returns JSON-encoded array containing all user projects.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/?shell#get-all-projects
+      operationId: getAllProjects
+      tags:
+      - Projects
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: An array of all projects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+              example:
+                summary: Example response
+                value:
+                  id: 220474322
+                  name: Inbox
+                  comment_count: 10
+                  order: 0
+                  color: grey
+                  is_shared: false
+                  is_favorite: false
+                  is_inbox_project: true
+                  is_team_inbox: false
+                  view_style: list
+                  url: https://todoist.com/showProject?id=220474322
+                  parent_id: null
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Create a new project
+      description: 'Creates a new project and returns it as a JSON object.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#create-a-new-project
+      operationId: createProject
+      tags:
+      - Projects
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: name
+        schema:
+          type: string
+        required: true
+        description: Name of the project
+      - in: query
+        name: parent_id
+        schema:
+          type: string
+        required: false
+        description: Parent project ID
+      - in: query
+        name: color
+        schema:
+          type: string
+        required: false
+        description: The color of the project icon. Refer to the name column in the
+          Colors guide for more info. https://developer.todoist.com/guides/#colors
+      - in: query
+        name: is_favorite
+        schema:
+          type: boolean
+        required: false
+        description: Whether the project is a favorite (a true or false value).
+      - in: query
+        name: view_style
+        schema:
+          type: string
+        required: false
+        description: A string value (either list or board, default is list). This
+          determines the way the project is displayed within the Todoist clients.
+      responses:
+        '200':
+          description: Project created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              example:
+                id: 2203306141
+                name: Shopping List
+                comment_count: 0
+                color: charcoal
+                is_shared: false
+                order: 1
+                is_favorite: true
+                is_inbox_project: true
+                is_team_inbox: false
+                view_style: list
+                url: https://todoist.com/showProject?id=2203306141
+                parent_id: null
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /projects/{projectId}:
+    get:
+      summary: Get a project
+      description: 'Returns a JSON object containing a project object related to the
+        given ID.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/?shell#get-a-project
+      operationId: getProject
+      tags:
+      - Projects
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+        required: true
+        description: Project ID.
+      responses:
+        '200':
+          description: Requested project returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              example:
+                id: 2203306141
+                name: Shopping List
+                comment_count: 0
+                color: charcoal
+                is_shared: false
+                order: 1
+                is_favorite: true
+                is_inbox_project: true
+                is_team_inbox: false
+                view_style: list
+                url: https://todoist.com/showProject?id=2203306141
+                parent_id: null
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Update a project
+      description: 'Returns a JSON object containing the updated project object.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/?shell#update-a-project
+      operationId: updateProject
+      tags:
+      - Projects
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+        required: true
+        description: Project ID.
+      - in: query
+        name: name
+        schema:
+          type: string
+        required: false
+        description: Name of the project
+      - in: query
+        name: color
+        schema:
+          type: string
+        required: false
+        description: The color of the project icon. Refer to the name column in the
+          Colors guide for more info. https://developer.todoist.com/guides/#colors
+      - in: query
+        name: is_favorite
+        schema:
+          type: boolean
+        required: false
+        description: Whether the project is a favorite (a true or false value).
+      - in: query
+        name: view_style
+        schema:
+          type: string
+        required: false
+        description: A string value (either list or board, default is list). This
+          determines the way the project is displayed within the Todoist clients.
+      responses:
+        '200':
+          description: Project updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              example:
+                id: 2203306141
+                name: Things to buy
+                comment_count: 0
+                color: charcoal
+                is_shared: false
+                order: 1
+                is_favorite: true
+                is_inbox_project: true
+                is_team_inbox: false
+                view_style: list
+                url: https://todoist.com/showProject?id=2203306141
+                parent_id: null
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      summary: Delete a project
+      description: 'Deletes a project.
+
+
+        A successful response has 204 No Content status and an empty body.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/?shell#delete-a-project
+      operationId: deleteProject
+      tags:
+      - Projects
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+        required: true
+        description: Project ID.
+      responses:
+        '204':
+          description: Project deleted.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /projects/{projectId}/collaborators:
+    get:
+      summary: Get all project collaborators
+      description: 'Returns JSON-encoded array containing all collaborators of a shared
+        project.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/?shell#get-all-collaborators
+      operationId: getAllCollaborators
+      tags:
+      - Projects
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+        required: true
+        description: Project ID.
+      responses:
+        '200':
+          description: A list of collaborators.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collaborator'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /sections:
+    get:
+      summary: Get all sections
+      description: 'Returns a JSON array of all sections.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#get-all-sections
+      operationId: getAllSections
+      tags:
+      - Sections
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: project_id
+        schema:
+          type: string
+        required: false
+        description: Project ID.
+      responses:
+        '200':
+          description: An array of all sections.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Section'
+              example:
+                id: 7025
+                project_id: 2203306141
+                order: 1
+                name: Groceries
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Create a new section
+      description: 'Creates a new section and returns it as a JSON object.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#create-a-new-section
+      operationId: createSection
+      tags:
+      - Sections
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: project_id
+        schema:
+          type: string
+        required: true
+        description: Project ID this section should belong to
+      - in: query
+        name: name
+        schema:
+          type: string
+        required: true
+        description: Section name
+      - in: query
+        name: order
+        schema:
+          type: integer
+        required: false
+        description: Order among other sections in a project
+      responses:
+        '200':
+          description: Section created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Section'
+              example:
+                id: 7025
+                project_id: 2203306141
+                order: 1
+                name: Groceries
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /sections/{sectionId}:
+    get:
+      summary: Get single section
+      description: 'Returns a single section as a JSON object.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#get-a-single-section
+      operationId: getSingleSection
+      tags:
+      - Sections
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: sectionId
+        schema:
+          type: string
+        required: true
+        description: Section ID.
+      responses:
+        '200':
+          description: Section retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Section'
+              example:
+                id: 7025
+                project_id: 2203306141
+                order: 1
+                name: Groceries
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Update a section name
+      description: 'Returns the updated section as a JSON object.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#update-a-section
+      operationId: updateSection
+      tags:
+      - Sections
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: sectionId
+        schema:
+          type: string
+        required: true
+        description: Section ID.
+      - in: query
+        name: name
+        schema:
+          type: string
+        required: true
+        description: Section name.
+      responses:
+        '200':
+          description: Section name updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Section'
+              example:
+                id: 7025
+                project_id: 2203306141
+                order: 1
+                name: Supermarket
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      summary: Delete a section
+      description: 'Deletes a section.
+
+
+        A successful response has 204 No Content status and an empty body.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#delete-a-section
+      operationId: deleteSection
+      tags:
+      - Sections
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: sectionId
+        schema:
+          type: string
+        required: true
+        description: Section ID.
+      responses:
+        '204':
+          description: Section deleted.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /tasks:
+    get:
+      summary: Get active tasks
+      description: 'Returns a JSON-encoded array containing all active tasks.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#get-active-tasks
+      operationId: getActiveTasks
+      tags:
+      - Tasks
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: project_id
+        schema:
+          type: string
+        required: false
+        description: Filter tasks by project ID.
+      - in: query
+        name: section_id
+        schema:
+          type: string
+        required: false
+        description: Filter tasks by section ID.
+      - in: query
+        name: label
+        schema:
+          type: string
+        required: false
+        description: Filter tasks by label name.
+      - in: query
+        name: filter
+        schema:
+          type: string
+        required: false
+        description: Filter by any supported filter.
+      - in: query
+        name: lang
+        schema:
+          type: string
+        required: false
+        description: IETF language tag defining what language the filter is written
+          in, if it differs from the default English.
+      - in: query
+        name: ids
+        schema:
+          type: array
+          items:
+            type: integer
+        required: false
+        description: A list of the task IDs to retrieve, this should be a comma-separated
+          list.
+      responses:
+        '200':
+          description: List of active tasks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+              example:
+              - creator_id: '2671355'
+                created_at: 2019-12-11 22:36:50+00:00
+                assignee_id: '2671362'
+                assigner_id: '2671355'
+                comment_count: 10
+                is_completed: false
+                content: Buy Milk
+                description: ''
+                due:
+                  date: 2016-09-01
+                  is_recurring: false
+                  datetime: 2016-09-01 12:00:00+00:00
+                  string: tomorrow at 12
+                  timezone: Europe/Moscow
+                duration: null
+                id: '2995104339'
+                labels:
+                - Food
+                - Shopping
+                order: 1
+                priority: 1
+                project_id: '2203306141'
+                section_id: '7025'
+                parent_id: '2995104589'
+                url: https://todoist.com/showTask?id=2995104339
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Create a new task
+      description: 'Creates a new task and returns it as a JSON object.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#create-a-new-task
+      operationId: createTask
+      tags:
+      - Tasks
+      security:
+      - api_key: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Task content. This value may contain markdown-formatted
+                    text and hyperlinks.
+                description:
+                  type: string
+                  description: A description for the task. This value may contain
+                    markdown-formatted text and hyperlinks.
+                project_id:
+                  type: string
+                  description: Task project ID. If not set, the task is put in the
+                    user's Inbox.
+                section_id:
+                  type: string
+                  description: ID of the section to put the task into.
+                parent_id:
+                  type: string
+                  description: Parent task ID.
+                order:
+                  type: integer
+                  description: Non-zero integer value used by clients to sort tasks
+                    under the same parent.
+                labels:
+                  type: array
+                  items:
+                    type: string
+                  description: The task's labels (a list of names that may represent
+                    either personal or shared labels).
+                priority:
+                  type: integer
+                  description: Task priority from 1 (normal) to 4 (urgent).
+                due_string:
+                  type: string
+                  description: Human-defined task due date (ex. "next Monday," "Tomorrow").
+                    Value is set using local (not UTC) time.
+                due_date:
+                  type: string
+                  description: Specific date in YYYY-MM-DD format relative to the
+                    user's timezone.
+                due_datetime:
+                  type: string
+                  description: Specific date and time in RFC3339 format in UTC.
+                due_lang:
+                  type: string
+                  description: 2-letter code specifying the language in case due_string
+                    is not written in English.
+                assignee_id:
+                  type: string
+                  description: The responsible user ID (only applies to shared tasks).
+                duration:
+                  type: integer
+                  description: A positive (greater than zero) integer for the amount
+                    of duration_unit the task will take. If specified, you must define
+                    a duration_unit.
+                duration_unit:
+                  type: string
+                  description: The unit of time that the duration field above represents.
+                    Must be either minute or day. If specified, duration must be defined
+                    as well.
+            example:
+              content: Buy Milk
+              description: Milk to be bought from local store
+              project_id: '2203306141'
+              labels:
+              - Shopping
+              - Urgent
+              priority: 4
+              due_string: tomorrow at 12
+      responses:
+        '200':
+          description: Task created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              example:
+                creator_id: '2671355'
+                created_at: 2019-12-11 22:36:50+00:00
+                assignee_id: null
+                assigner_id: null
+                comment_count: 0
+                is_completed: false
+                content: Buy Milk
+                description: ''
+                due:
+                  date: 2016-09-01
+                  is_recurring: false
+                  datetime: 2016-09-01 12:00:00+00:00
+                  string: tomorrow at 12
+                  timezone: Europe/Moscow
+                duration: null
+                id: '2995104339'
+                labels: []
+                order: 1
+                priority: 4
+                project_id: '2203306141'
+                section_id: null
+                parent_id: null
+                url: https://todoist.com/showTask?id=2995104339
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /tasks/{taskId}:
+    get:
+      summary: Get an active task
+      description: 'Returns a single active (non-completed) task by ID as a JSON object.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#get-an-active-task
+      operationId: getActiveTask
+      tags:
+      - Tasks
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: taskId
+        schema:
+          type: integer
+        required: true
+        description: The ID of the task to retrieve.
+      responses:
+        '200':
+          description: Task details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              example:
+                creator_id: '2671355'
+                created_at: 2019-12-11 22:36:50+00:00
+                assignee_id: '2671362'
+                assigner_id: '2671355'
+                comment_count: 10
+                is_completed: false
+                content: Buy Milk
+                description: ''
+                due:
+                  date: 2016-09-01
+                  is_recurring: false
+                  datetime: 2016-09-01 12:00:00+00:00
+                  string: tomorrow at 12
+                  timezone: Europe/Moscow
+                duration: null
+                id: '2995104339'
+                labels:
+                - Food
+                - Shopping
+                order: 1
+                priority: 1
+                project_id: '2203306141'
+                section_id: '7025'
+                parent_id: '2995104589'
+                url: https://todoist.com/showTask?id=2995104339
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Update a task
+      description: 'Updates a specified task and returns it as a JSON object.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#update-a-task
+      operationId: updateTask
+      tags:
+      - Tasks
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: taskId
+        required: true
+        description: The ID of the task to update.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: Task content. This value may contain markdown-formatted
+                    text and hyperlinks.
+                description:
+                  type: string
+                  description: A description for the task. This value may contain
+                    markdown-formatted text and hyperlinks.
+                labels:
+                  type: array
+                  items:
+                    type: string
+                  description: The task's labels (a list of names that may represent
+                    either personal or shared labels).
+                priority:
+                  type: integer
+                  description: Task priority from 1 (normal) to 4 (urgent).
+                due_string:
+                  type: string
+                  description: Human-defined task due date (ex. "next Monday," "Tomorrow").
+                    Value is set using local (not UTC) time.
+                due_date:
+                  type: string
+                  description: Specific date in YYYY-MM-DD format relative to the
+                    user's timezone.
+                due_datetime:
+                  type: string
+                  description: Specific date and time in RFC3339 format in UTC.
+                due_lang:
+                  type: string
+                  description: 2-letter code specifying the language in case due_string
+                    is not written in English.
+                assignee_id:
+                  type: string
+                  description: The responsible user ID or null to unset (for shared
+                    tasks).
+                duration:
+                  type: integer
+                  description: A positive integer for the task duration, or null to
+                    unset. If specified, you must define a duration_unit.
+                duration_unit:
+                  type: string
+                  description: The unit of time for the duration. Must be either 'minute'
+                    or 'day'.
+            example:
+              content: Buy Coffee
+              description: Coffee needed for the office
+              labels:
+              - Office
+              - Urgent
+              priority: 2
+              due_string: tomorrow at 9 AM
+      responses:
+        '200':
+          description: Task updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              example:
+                creator_id: '2671355'
+                created_at: 2019-12-11 22:36:50+00:00
+                assignee_id: '2671362'
+                assigner_id: '2671355'
+                comment_count: 10
+                is_completed: false
+                content: Buy Coffee
+                description: ''
+                due:
+                  date: 2016-09-01
+                  is_recurring: false
+                  datetime: 2016-09-01 12:00:00+00:00
+                  string: tomorrow at 12
+                  timezone: Europe/Moscow
+                duration: null
+                id: '2995104339'
+                labels:
+                - Food
+                - Shopping
+                order: 1
+                priority: 1
+                project_id: '2203306141'
+                section_id: '7025'
+                parent_id: '2995104589'
+                url: https://todoist.com/showTask?id=2995104339
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      summary: Delete a task
+      description: "Deletes a task. \n\nA successful response has 204 No Content status\
+        \ and an empty body.\n"
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#delete-a-task
+      operationId: deleteTask
+      tags:
+      - Tasks
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: taskId
+        schema:
+          type: integer
+        required: true
+        description: The ID of the task to delete.
+      responses:
+        '204':
+          description: Task successfully deleted. The response is empty.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /tasks/{taskId}/close:
+    post:
+      summary: Close a task
+      description: 'Closes a task. Regular tasks are marked complete and moved to
+        history, along with their subtasks. Tasks with recurring due dates will be
+        scheduled to their next occurrence.
+
+
+        A successful response has 204 No Content status and an empty body.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#close-a-task
+      operationId: closeTask
+      tags:
+      - Tasks
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: taskId
+        schema:
+          type: integer
+        required: true
+        description: The ID of the task to close.
+      responses:
+        '204':
+          description: Task successfully closed. The response is empty.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /tasks/{taskId}/reopen:
+    post:
+      summary: Reopen a task
+      description: 'Reopens a task. Any ancestor items or sections will also be marked
+        as uncomplete and restored from history. The reinstated items and sections
+        will appear at the end of the list within their parent, after any previously
+        active items.
+
+
+        A successful response has 204 No Content status...
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#reopen-a-task
+      operationId: reopenTask
+      tags:
+      - Tasks
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: taskId
+        schema:
+          type: integer
+        required: true
+        description: The ID of the task to reopen.
+      responses:
+        '204':
+          description: Task successfully reopened. The response is empty.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /comments:
+    get:
+      summary: Get all comments
+      description: 'Returns a JSON-encoded array of all comments for a given task_id
+        or project_id. Note that one of task_id or project_id arguments is required.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#get-all-comments
+      operationId: getAllComments
+      tags:
+      - Comments
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: project_id
+        schema:
+          type: string
+        required: false
+        description: ID of the project used to filter comments. task_id or project_id
+          required
+      - in: query
+        name: task_id
+        schema:
+          type: string
+        required: false
+        description: ID of the task used to filter comments. task_id or project_id
+          required
+      responses:
+        '200':
+          description: List of all comments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+              example:
+              - content: Need one bottle of milk
+                id: '2992679862'
+                posted_at: 2016-09-22 07:00:00+00:00
+                project_id: null
+                task_id: '2995104339'
+                attachment:
+                  file_name: File.pdf
+                  file_type: application/pdf
+                  file_url: https://cdn-domain.tld/path/to/file.pdf
+                  resource_type: file
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Create a new comment
+      description: 'Creates a new comment on a project or task and returns it as a
+        JSON object. Note that one of task_id or project_id arguments is required.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#create-a-new-comment
+      operationId: createComment
+      tags:
+      - Comments
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: task_id
+        required: false
+        description: Comment's task ID (for task comments). task_id or project_id
+          required
+        schema:
+          type: string
+      - in: query
+        name: project_id
+        required: false
+        description: Comment's project ID (for project comments). task_id or project_id
+          required
+        schema:
+          type: string
+      - in: query
+        name: content
+        required: true
+        description: Comment content. This value may contain markdown-formatted text
+          and hyperlinks.
+        schema:
+          type: string
+      - in: query
+        name: attachment
+        required: false
+        description: Object for attachment object.
+        schema:
+          type: object
+          properties:
+            resource_type:
+              type: string
+            file_url:
+              type: string
+            file_type:
+              type: string
+            file_name:
+              type: string
+      responses:
+        '200':
+          description: Comment created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+              example:
+                content: Need one bottle of milk
+                id: '2992679862'
+                posted_at: 2016-09-22 07:00:00+00:00
+                project_id: null
+                task_id: '2995104339'
+                attachment:
+                  file_name: File.pdf
+                  file_type: application/pdf
+                  file_url: https://s3.amazonaws.com/domorebetter/Todoist+Setup+Guide.pdf
+                  resource_type: file
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /comments/{comment_id}:
+    get:
+      summary: Get a comment
+      description: 'Returns a single comment as a JSON object.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#get-a-comment
+      operationId: getComment
+      tags:
+      - Comments
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: comment_id
+        schema:
+          type: integer
+        required: true
+        description: The ID of the comment to retrieve.
+      responses:
+        '200':
+          description: Comment details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+              example:
+                content: Need one bottle of milk
+                id: '2992679862'
+                posted_at: 2016-09-22 07:00:00+00:00
+                project_id: null
+                task_id: '2995104339'
+                attachment:
+                  file_name: File.pdf
+                  file_type: application/pdf
+                  file_url: https://s3.amazonaws.com/domorebetter/Todoist+Setup+Guide.pdf
+                  resource_type: file
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Update a comment
+      description: 'Updates a comment and returns it as a JSON object.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#update-a-comment
+      operationId: updateComment
+      tags:
+      - Comments
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: comment_id
+        required: true
+        description: The ID of the comment to update.
+        schema:
+          type: string
+      - in: query
+        name: content
+        required: true
+        description: New content for the comment. This value may contain markdown-formatted
+          text and hyperlinks.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Comment updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+              example:
+                content: Need two bottles of milk
+                id: '2992679862'
+                posted_at: 2016-09-22 07:00:00+00:00
+                project_id: null
+                task_id: '2995104339'
+                attachment:
+                  file_name: File.pdf
+                  file_type: application/pdf
+                  file_url: https://s3.amazonaws.com/domorebetter/Todoist+Setup+Guide.pdf
+                  resource_type: file
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      summary: Delete a comment
+      description: 'Deletes a comment.
+
+
+        A successful response has 204 No Content status and an empty body.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#delete-a-comment
+      operationId: deleteComment
+      tags:
+      - Comments
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: comment_id
+        schema:
+          type: integer
+        required: true
+        description: The ID of the comment to delete.
+      responses:
+        '204':
+          description: Comment successfully deleted. The response is empty.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /labels:
+    get:
+      summary: Get all personal labels
+      description: 'Returns a JSON-encoded array containing all user labels.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#get-all-personal-labels
+      operationId: getAllPersonalLabels
+      tags:
+      - Labels
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: List of all user labels.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Label'
+              example:
+              - id: '2156154810'
+                name: Food
+                color: charcoal
+                order: 1
+                is_favorite: false
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Create a new personal label
+      description: 'Creates a new personal label and returns its object as JSON.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#create-a-new-personal-label
+      operationId: createPersonalLabel
+      tags:
+      - Labels
+      security:
+      - api_key: []
+      parameters:
+      - in: query
+        name: name
+        required: true
+        description: Name of the label.
+        schema:
+          type: string
+      - in: query
+        name: order
+        required: false
+        description: Label order.
+        schema:
+          type: integer
+      - in: query
+        name: color
+        required: false
+        description: The color of the label icon. Refer to the name column in the
+          Colors guide for more info.
+        schema:
+          type: string
+      - in: query
+        name: is_favorite
+        required: false
+        description: Whether the label is a favorite (a true or false value).
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Label created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+              example:
+                id: '2156154810'
+                name: Food
+                color: charcoal
+                order: 1
+                is_favorite: false
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+  /labels/{label_id}:
+    get:
+      summary: Get a personal label
+      description: 'Returns a personal label by ID.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#get-a-personal-label
+      operationId: getPersonalLabel
+      tags:
+      - Labels
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: label_id
+        schema:
+          type: integer
+        required: true
+        description: The ID of the label to retrieve.
+      responses:
+        '200':
+          description: Label details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+              example:
+                id: '2156154810'
+                name: Food
+                color: charcoal
+                order: 1
+                is_favorite: false
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    post:
+      summary: Update a personal label
+      description: 'Returns the updated label.
+
+
+        A successful response has 200 OK status and application/json Content-Type.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#update-a-personal-label
+      operationId: updatePersonalLabel
+      tags:
+      - Labels
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: label_id
+        required: true
+        description: The ID of the label to update.
+        schema:
+          type: string
+      - in: query
+        name: name
+        required: false
+        description: New name of the label.
+        schema:
+          type: string
+      - in: query
+        name: order
+        required: false
+        description: Number that is used by clients to sort the list of labels.
+        schema:
+          type: integer
+      - in: query
+        name: color
+        required: false
+        description: The color of the label icon. Refer to the name column in the
+          Colors guide for more info.
+        schema:
+          type: string
+      - in: query
+        name: is_favorite
+        required: false
+        description: Whether the label is a favorite (a true or false value).
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Label updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+              example:
+                id: '2156154810'
+                name: Drinks
+                color: charcoal
+                order: 1
+                is_favorite: false
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    delete:
+      summary: Delete a personal label
+      description: 'Deletes a personal label, all instances of the label will be removed
+        from tasks.
+
+
+        A successful response has 204 No Content status and an empty body.
+
+        '
+      externalDocs:
+        description: Documentation at link below
+        url: https://developer.todoist.com/rest/v2/#delete-a-personal-label
+      operationId: deletePersonalLabel
+      tags:
+      - Labels
+      security:
+      - api_key: []
+      parameters:
+      - in: path
+        name: label_id
+        schema:
+          type: integer
+        required: true
+        description: The ID of the label to delete.
+      responses:
+        '204':
+          description: Label successfully deleted. The response is empty.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+components:
+  schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Project ID.
+        name:
+          type: string
+          description: Project name.
+        color:
+          type: string
+          description: The color of the project icon. Refer to the name column in
+            the Colors guide for more info.
+        parent_id:
+          type:
+          - string
+          - 'null'
+          description: ID of parent project (will be null for top-level projects).
+        order:
+          type: integer
+          description: Project position under the same parent (read-only, will be
+            0 for inbox and team inbox projects).
+        comment_count:
+          type: integer
+          description: Number of project comments.
+        is_shared:
+          type: boolean
+          description: Whether the project is shared (read-only, a true or false value).
+        is_favorite:
+          type: boolean
+          description: Whether the project is a favorite (a true or false value).
+        is_inbox_project:
+          type: boolean
+          description: Whether the project is the user's Inbox (read-only).
+        is_team_inbox:
+          type: boolean
+          description: Whether the project is the Team Inbox (read-only).
+        view_style:
+          type: string
+          description: A string value (either list or board). This determines the
+            way the project is displayed within the Todoist clients.
+        url:
+          type: string
+          description: URL to access this project in the Todoist web or mobile applications.
+    Collaborator:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Collaborator's user ID
+        name:
+          type: string
+          description: Collaborator's name
+        email:
+          type: string
+          description: Collaborator's email
+    Section:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Section ID
+        project_id:
+          type: string
+          description: ID of the project section belongs to
+        order:
+          type: integer
+          description: Section position among other sections from the same project
+        name:
+          type: string
+          description: Section name
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Task ID.
+        project_id:
+          type: string
+          description: Task's project ID (read-only).
+        section_id:
+          type:
+          - string
+          - 'null'
+          description: ID of section task belongs to (read-only, will be null when
+            the task has no parent section).
+        content:
+          type: string
+          description: Task content. This value may contain markdown-formatted text
+            and hyperlinks. Details on markdown support can be found in the Text Formatting
+            article in the Help Center.
+        description:
+          type: string
+          description: A description for the task. This value may contain markdown-formatted
+            text and hyperlinks. Details on markdown support can be found in the Text
+            Formatting article in the Help Center.
+        is_completed:
+          type: boolean
+          description: Flag to mark completed tasks.
+        labels:
+          type: array
+          items:
+            type: string
+            description: The task's labels (a list of names that may represent either
+              personal or shared labels).
+        parent_id:
+          type:
+          - string
+          - 'null'
+          description: ID of parent task (read-only, will be null for top-level tasks).
+        order:
+          type: integer
+          description: Position under the same parent or project for top-level tasks
+            (read-only).
+        priority:
+          type: integer
+          description: Task priority from 1 (normal, default value) to 4 (urgent).
+        due:
+          type:
+          - object
+          - 'null'
+          properties:
+            dueObject:
+              $ref: '#/components/schemas/Due'
+          description: Object representing task due date/time, or null if no date
+            is set.
+        url:
+          type: string
+          description: URL to access this task in the Todoist web or mobile applications
+            (read-only).
+        comment_count:
+          type: integer
+          description: Number of task comments (read-only).
+        created_at:
+          type: string
+          description: The date when the task was created (read-only).
+        creator_id:
+          type: string
+          description: The ID of the user who created the task (read-only).
+        assignee_id:
+          type:
+          - string
+          - 'null'
+          description: The responsible user ID (will be null if the task is unassigned).
+        assigner_id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the user who assigned the task (read-only, will be
+            null if the task is unassigned).
+        duration:
+          type:
+          - object
+          - 'null'
+          properties:
+            durationObject:
+              $ref: '#/components/schemas/Duration'
+          description: Object representing a task's duration, including a positive
+            integer for the amount of time and the unit of time (minute or day). The
+            object will be null if the task has no duration.
+    Due:
+      type: object
+      required:
+      - string
+      - date
+      - is_recurring
+      properties:
+        string:
+          type: string
+          description: Human defined date in arbitrary format.
+        date:
+          type: string
+          format: date
+          description: Date in format YYYY-MM-DD corrected to user's timezone.
+        is_recurring:
+          type: boolean
+          description: Whether the task has a recurring due date.
+        datetime:
+          type: string
+          format: date-time
+          description: Only returned if exact due time set (i.e. it's not a whole-day
+            task), date and time in RFC3339 format in UTC.
+        timezone:
+          type: string
+          description: "Only returned if exact due time set, user's timezone definition\
+            \ either in tzdata-compatible format (\"Europe/Berlin\") or as a string\
+            \ specifying east of UTC offset as \"UTC\xB1HH:MM\" (i.e. \"UTC-01:00\"\
+            )."
+    Duration:
+      type: object
+      properties:
+        amount:
+          type:
+          - integer
+          - 'null'
+          description: A positive (greater than zero) integer for the amount of duration_unit
+            the task will take, or null to unset. If specified, you must define a
+            duration_unit.
+        unit:
+          type:
+          - string
+          - 'null'
+          description: The unit of time that the duration field above represents,
+            or null to unset. Must be either minute or day. If specified, duration
+            must be defined as well.
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Comment ID.
+        task_id:
+          type:
+          - string
+          - 'null'
+          description: Comment's task ID (will be null if the comment belongs to a
+            project).
+        project_id:
+          type:
+          - string
+          - 'null'
+          description: Comment's project ID (will be null if the comment belongs to
+            a task).
+        posted_at:
+          type: string
+          format: date-time
+          description: Date and time when comment was added, in RFC3339 format in
+            UTC.
+        content:
+          type: string
+          description: Comment content. This value may contain markdown-formatted
+            text and hyperlinks. Details on markdown support can be found in the Text
+            Formatting article in the Help Center.
+        attachment:
+          type:
+          - object
+          - 'null'
+          description: Attachment file metadata (will be null if there is no attachment).
+            Format varies depending on the type of attachment, as detailed in the
+            Sync API documentation.
+    Label:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Label ID.
+        name:
+          type: string
+          description: Label name.
+        color:
+          type: string
+          description: The color of the label icon. Refer to the name column in the
+            Colors guide for more info.
+        order:
+          type: integer
+          description: Number used by clients to sort list of labels.
+        is_favorite:
+          type: boolean
+          description: Whether the label is a favorite (a true or false value).
+    ErrorModel:
+      type: object
+      required:
+      - message
+      - code
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          minimum: 100
+          maximum: 600
+    ActivityEvents:
+      properties:
+        event_date:
+          format: date-time
+          title: Event Date
+          type: string
+        event_type:
+          title: Event Type
+          type: string
+        extra_data:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: This object contains at least the name of the project, or the
+            content of an item or comment, and optionally the last_name if a project
+            was renamed, the last_content if an item or note was renamed, the due_date
+            and last_due_date if an item's due date changed, the responsible_uid and
+            last_responsible_uid if an item's responsible uid changed, the description
+            and last_description if an item's description changed, and the client
+            that caused the logging of the event
+          title: Extra Data
+        extra_data_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Extra Data Id
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        initiator_id:
+          anyOf:
+          - description: The ID of the user who is responsible for the event, which
+              only makes sense in shared projects, items and notes, and is null for
+              non-shared objects
+            type: string
+          - type: 'null'
+          title: Initiator Id
+        object_id:
+          title: Object Id
+          type: string
+        object_type:
+          title: Object Type
+          type: string
+        parent_item_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Item Id
+        parent_project_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Project Id
+        source:
+          anyOf:
+          - enum:
+            - mysql
+            - clickhouse
+            type: string
+          - type: 'null'
+          description: The data source where this activity log entry was retrieved
+            from
+          title: Source
+        v2_object_id:
+          title: V2 Object Id
+          type: string
+        v2_parent_item_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: V2 Parent Item Id
+        v2_parent_project_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: V2 Parent Project Id
+      required:
+      - id
+      title: ActivityEvents
+      type: object
+    Body_create_project_from_file_api_v1_templates_create_project_from_file_post:
+      properties:
+        file:
+          format: binary
+          title: File
+          type: string
+        name:
+          title: Name
+          type: string
+        workspace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Workspace Id
+      title: Body_create_project_from_file_api_v1_templates_create_project_from_file_post
+      type: object
+    Body_import_into_project_from_file_api_v1_templates_import_into_project_from_file_post:
+      properties:
+        file:
+          format: binary
+          title: File
+          type: string
+        project_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          title: Project Id
+      required:
+      - project_id
+      title: Body_import_into_project_from_file_api_v1_templates_import_into_project_from_file_post
+      type: object
+    Body_update_logo_api_v1_workspaces_logo_post:
+      properties:
+        delete:
+          default: false
+          title: Delete
+          type: boolean
+        file:
+          format: binary
+          title: File
+          type: string
+        workspace_id:
+          title: Workspace Id
+          type: integer
+      title: Body_update_logo_api_v1_workspaces_logo_post
+      type: object
+    Extended_Collaborator:
+      properties:
+        email:
+          description: The user's email address
+          examples:
+          - email@example.org
+          title: Email
+          type: string
+        id:
+          description: The user's ID
+          examples:
+          - 0192837465
+          title: Id
+          type: string
+        name:
+          description: The user's full name
+          examples:
+          - John Smith
+          title: Name
+          type: string
+      required:
+      - id
+      title: Collaborator
+      type: object
+    CollaboratorRole:
+      description: 'User role in the project. For personal project the role should
+        be always "CREATOR"
+
+        User role for projects v1 maybe specified as "CREATOR" or "ADMIN", because
+        in the
+
+        past there was no permissions.'
+      enum:
+      - CREATOR
+      - ADMIN
+      - READ_WRITE
+      title: CollaboratorRole
+      type: string
+    EmailObjectType:
+      enum:
+      - project
+      - project_comments
+      - task
+      title: EmailObjectType
+      type: string
+    EmailObjectTypePre9221:
+      enum:
+      - project
+      - project_comments
+      - item
+      title: EmailObjectTypePre9221
+      type: string
+    ExposedCollaboratorSyncView:
+      properties:
+        email:
+          title: Email
+          type: string
+        full_name:
+          title: Full Name
+          type: string
+        id:
+          title: Id
+          type: string
+        image_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Id
+        is_deleted:
+          title: Is Deleted
+          type: boolean
+        timezone:
+          title: Timezone
+          type: string
+      required:
+      - id
+      title: ExposedCollaboratorSyncView
+      type: object
+    FileURLResponse:
+      properties:
+        file_name:
+          title: File Name
+          type: string
+        file_url:
+          title: File Url
+          type: string
+      title: FileURLResponse
+      type: object
+    FolderView:
+      properties:
+        child_order:
+          default: 0
+          title: Child Order
+          type: integer
+        default_order:
+          default: 0
+          title: Default Order
+          type: integer
+        id:
+          default: '0'
+          title: Id
+          type: string
+        is_deleted:
+          default: false
+          title: Is Deleted
+          type: boolean
+        name:
+          default: ''
+          title: Name
+          type: string
+        workspace_id:
+          title: Workspace Id
+          type: string
+      required:
+      - id
+      title: FolderView
+      type: object
+    FormattedPrice:
+      properties:
+        currency:
+          title: Currency
+          type: string
+        tax_behavior:
+          title: Tax Behavior
+          type: string
+        unit_amount:
+          title: Unit Amount
+          type: integer
+      title: FormattedPrice
+      type: object
+    FormattedPriceListing:
+      properties:
+        billing_cycle:
+          enum:
+          - monthly
+          - yearly
+          title: Billing Cycle
+          type: string
+        prices:
+          items:
+            $ref: '#/components/schemas/FormattedPrice'
+          title: Prices
+          type: array
+      title: FormattedPriceListing
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    IDMapping:
+      properties:
+        new_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          examples:
+          - 6VfWjjjFg2xqX6Pa
+          title: New Id
+        old_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          examples:
+          - '918273645'
+          title: Old Id
+      title: IDMapping
+      type: object
+    ItemSyncView:
+      description: 'A class with fields representing an ItemView which will be returned
+        to
+
+        clients in a sync (or sync-like) response.'
+      properties:
+        added_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Added At
+        added_by_uid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Added By Uid
+        assigned_by_uid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assigned By Uid
+        checked:
+          examples:
+          - false
+          title: Checked
+          type: boolean
+        child_order:
+          title: Child Order
+          type: integer
+        completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Completed At
+        content:
+          title: Content
+          type: string
+        day_order:
+          title: Day Order
+          type: integer
+        deadline:
+          anyOf:
+          - additionalProperties:
+              anyOf:
+              - type: string
+              - type: 'null'
+            type: object
+          - type: 'null'
+          title: Deadline
+        description:
+          title: Description
+          type: string
+        due:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Due
+        duration:
+          anyOf:
+          - additionalProperties:
+              anyOf:
+              - type: integer
+              - type: string
+            type: object
+          - type: 'null'
+          title: Duration
+        id:
+          title: Id
+          type: string
+        is_collapsed:
+          title: Is Collapsed
+          type: boolean
+        is_deleted:
+          examples:
+          - false
+          title: Is Deleted
+          type: boolean
+        labels:
+          items:
+            type: string
+          title: Labels
+          type: array
+        note_count:
+          title: Note Count
+          type: integer
+        parent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Id
+        priority:
+          title: Priority
+          type: integer
+        project_id:
+          title: Project Id
+          type: string
+        responsible_uid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Responsible Uid
+        section_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Section Id
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        user_id:
+          title: User Id
+          type: string
+      required:
+      - id
+      - content
+      - project_id
+      title: ItemSyncView
+      type: object
+    LabelRestView:
+      properties:
+        color:
+          title: Color
+          type: string
+        id:
+          title: Id
+          type: string
+        is_favorite:
+          title: Is Favorite
+          type: boolean
+        name:
+          title: Name
+          type: string
+        order:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Order
+      required:
+      - id
+      title: LabelRestView
+      type: object
+    MemberView:
+      properties:
+        full_name:
+          examples:
+          - Dain Ironfoot
+          title: Full Name
+          type: string
+        image_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Id
+        is_deleted:
+          default: false
+          title: Is Deleted
+          type: boolean
+        role:
+          $ref: '#/components/schemas/WorkspaceRole'
+        timezone:
+          examples:
+          - GMT -3:00
+          title: Timezone
+          type: string
+        user_email:
+          examples:
+          - example@email.org
+          title: User Email
+          type: string
+        user_id:
+          examples:
+          - 0192837465
+          title: User Id
+          type: string
+        workspace_id:
+          examples:
+          - '42'
+          title: Workspace Id
+          type: string
+      title: MemberView
+      type: object
+    NoteSyncView:
+      description: 'The base class for NoteSyncViews, to be extended for Items and
+        Projects.
+
+
+        This class should generally not be instantiated directly, as it serves as
+        a
+
+        common structure for Items and Projects.'
+      properties:
+        content:
+          default: ''
+          title: Content
+          type: string
+        file_attachment:
+          anyOf:
+          - additionalProperties:
+              anyOf:
+              - type: string
+              - type: integer
+              - items: {}
+                type: array
+              - additionalProperties: true
+                type: object
+              - type: 'null'
+            type: object
+          - type: 'null'
+          title: File Attachment
+        id:
+          title: Id
+          type: string
+        is_deleted:
+          title: Is Deleted
+          type: boolean
+        posted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Posted At
+        posted_uid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Posted Uid
+        reactions:
+          anyOf:
+          - additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+          - type: 'null'
+          title: Reactions
+        uids_to_notify:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Uids To Notify
+      required:
+      - id
+      - content
+      title: NoteSyncView
+      type: object
+    NotificationChannel:
+      description: Which communication mechanism is being used to send this notification
+      enum:
+      - email
+      - push
+      title: NotificationChannel
+      type: string
+    NotificationType:
+      description: The type of notification being sent
+      enum:
+      - note_added
+      - item_assigned
+      - item_completed
+      - item_uncompleted
+      - karma_level
+      - share_invitation_sent
+      - share_invitation_accepted
+      - share_invitation_rejected
+      - share_invitation_blocked_by_project_limit
+      - user_left_project
+      - user_removed_from_project
+      - teams_workspace_upgraded
+      - teams_workspace_canceled
+      - teams_workspace_payment_failed
+      - workspace_invitation_created
+      - workspace_invitation_accepted
+      - workspace_invitation_rejected
+      - project_archived
+      - project_moved
+      - removed_from_workspace
+      - workspace_deleted
+      - message
+      - workspace_user_joined_by_domain
+      title: NotificationType
+      type: string
+    PaginatedList_ActivityEvents_:
+      properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            $ref: '#/components/schemas/ActivityEvents'
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    ? PaginatedList_Annotated_ProjectV1View__FieldInfo_annotation_NoneType__required_True__examples____id____name____child_order____parent_id____color____collapsed____is_archived____is_deleted____view_style_____
+    : properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            additionalProperties: true
+            examples:
+            - child_order: 1
+              collapsed: false
+              color: lime_green
+              id: '2203306141'
+              is_archived: true
+              is_deleted: false
+              name: Shopping List
+              view_style: list
+            type: object
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    ? PaginatedList_Annotated_Union_PersonalProjectSyncView__WorkspaceProjectSyncView___FieldInfo_annotation_NoneType__required_True__title__Project_object______
+    : properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/PersonalProjectSyncView'
+            - $ref: '#/components/schemas/WorkspaceProjectSyncView'
+            description: Can be either a personal or a workspace project.
+            title: Project object
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    PaginatedList_Collaborator_:
+      properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            $ref: '#/components/schemas/Collaborator'
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    PaginatedList_ItemSyncView_:
+      properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            $ref: '#/components/schemas/ItemSyncView'
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    PaginatedList_LabelRestView_:
+      properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            $ref: '#/components/schemas/LabelRestView'
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    PaginatedList_NoteSyncView_:
+      properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            $ref: '#/components/schemas/NoteSyncView'
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    PaginatedList_SectionSyncView_:
+      properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            $ref: '#/components/schemas/SectionSyncView'
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    PaginatedList_str_:
+      properties:
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        results:
+          items:
+            type: string
+          title: Results
+          type: array
+      title: PaginatedList
+      type: object
+    PersonalProjectSyncView:
+      description: 'A representation of a Personal Project Sync View, extending the
+        base ProjectSync
+
+        View, to be returned to clients in a sync (or sync-like) response.'
+      properties:
+        access:
+          anyOf:
+          - $ref: '#/components/schemas/ProjectAccessView'
+          - type: 'null'
+        can_assign_tasks:
+          title: Can Assign Tasks
+          type: boolean
+        child_order:
+          title: Child Order
+          type: integer
+        color:
+          title: Color
+          type: string
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        creator_uid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creator Uid
+        default_order:
+          title: Default Order
+          type: integer
+        description:
+          title: Description
+          type: string
+        id:
+          title: Id
+          type: string
+        inbox_project:
+          title: Inbox Project
+          type: boolean
+        is_archived:
+          title: Is Archived
+          type: boolean
+        is_collapsed:
+          title: Is Collapsed
+          type: boolean
+        is_deleted:
+          title: Is Deleted
+          type: boolean
+        is_favorite:
+          title: Is Favorite
+          type: boolean
+        is_frozen:
+          title: Is Frozen
+          type: boolean
+        is_shared:
+          title: Is Shared
+          type: boolean
+        name:
+          title: Name
+          type: string
+        parent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Id
+        public_key:
+          title: Public Key
+          type: string
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        view_style:
+          title: View Style
+          type: string
+      required:
+      - id
+      title: PersonalProjectSyncView
+      type: object
+    PlanPrice:
+      properties:
+        amount:
+          title: Amount
+          type: string
+        billing_cycle:
+          anyOf:
+          - enum:
+            - monthly
+            - yearly
+            type: string
+          - type: 'null'
+          title: Billing Cycle
+        currency:
+          title: Currency
+          type: string
+        tax_behavior:
+          title: Tax Behavior
+          type: string
+      title: PlanPrice
+      type: object
+    ProjectAccessView:
+      properties:
+        configuration:
+          anyOf:
+          - $ref: '#/components/schemas/RestrictedProjectConfiguration'
+          - $ref: '#/components/schemas/TeamProjectConfiguration'
+          - $ref: '#/components/schemas/PublicProjectConfiguration'
+          title: Configuration
+        visibility:
+          $ref: '#/components/schemas/ProjectVisibility'
+      title: ProjectAccessView
+      type: object
+    ProjectImportCreateResponseWithObjects:
+      properties:
+        comments:
+          items:
+            additionalProperties: true
+            type: object
+          title: Comments
+          type: array
+        project_id:
+          title: Project Id
+          type: string
+        project_notes:
+          items:
+            additionalProperties: true
+            type: object
+          title: Project Notes
+          type: array
+        projects:
+          items:
+            additionalProperties: true
+            type: object
+          title: Projects
+          type: array
+        sections:
+          items:
+            additionalProperties: true
+            type: object
+          title: Sections
+          type: array
+        status:
+          const: ok
+          title: Status
+          type: string
+        tasks:
+          items:
+            additionalProperties: true
+            type: object
+          title: Tasks
+          type: array
+        template_type:
+          title: Template Type
+          type: string
+      required:
+      - project_id
+      title: ProjectImportCreateResponseWithObjects
+      type: object
+    ProjectImportResponse:
+      properties:
+        comments:
+          items:
+            additionalProperties: true
+            type: object
+          title: Comments
+          type: array
+        project_notes:
+          items:
+            additionalProperties: true
+            type: object
+          title: Project Notes
+          type: array
+        projects:
+          items:
+            additionalProperties: true
+            type: object
+          title: Projects
+          type: array
+        sections:
+          items:
+            additionalProperties: true
+            type: object
+          title: Sections
+          type: array
+        status:
+          const: ok
+          title: Status
+          type: string
+        tasks:
+          items:
+            additionalProperties: true
+            type: object
+          title: Tasks
+          type: array
+        template_type:
+          title: Template Type
+          type: string
+      title: ProjectImportResponse
+      type: object
+    ProjectStatus:
+      description: 'Project status.
+
+
+        At the moment, this is for workspace projects only.'
+      enum:
+      - PLANNED
+      - IN_PROGRESS
+      - PAUSED
+      - COMPLETED
+      - CANCELED
+      title: ProjectStatus
+      type: string
+    ProjectViewStyle:
+      enum:
+      - LIST
+      - BOARD
+      - CALENDAR
+      title: ProjectViewStyle
+      type: string
+    ProjectVisibility:
+      description: Indicates who can see a project
+      enum:
+      - restricted
+      - team
+      - public
+      title: ProjectVisibility
+      type: string
+    PublicProjectConfiguration:
+      properties:
+        disable_duplication:
+          title: Disable Duplication
+          type: boolean
+        hide_collaborator_details:
+          title: Hide Collaborator Details
+          type: boolean
+      title: PublicProjectConfiguration
+      type: object
+    RemovedNotificationType:
+      description: 'A set of legacy NotificationType values that have been removed
+
+        from the mailers and database, but are still referenced by clients
+
+        therefore we have to maintain the contract.
+
+
+        Ensures we still send down the keys without needing to maintain
+
+        the associated mailer code and database values.'
+      enum:
+      - biz_trial_enter_cc
+      - biz_trial_will_end
+      - biz_payment_failed
+      - biz_account_disabled
+      - biz_invitation_created
+      - biz_invitation_accepted
+      - biz_invitation_rejected
+      - biz_policy_disallowed_invitation
+      - biz_policy_rejected_invitation
+      title: RemovedNotificationType
+      type: string
+    RestrictedProjectConfiguration:
+      properties: {}
+      title: RestrictedProjectConfiguration
+      type: object
+    SectionSyncView:
+      description: 'A class with fields representing a SectionView which will be returned
+
+        to clients in a sync (or sync-like) response.'
+      properties:
+        added_at:
+          title: Added At
+          type: string
+        archived_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived At
+        id:
+          title: Id
+          type: string
+        is_archived:
+          title: Is Archived
+          type: boolean
+        is_collapsed:
+          title: Is Collapsed
+          type: boolean
+        is_deleted:
+          title: Is Deleted
+          type: boolean
+        name:
+          title: Name
+          type: string
+        project_id:
+          title: Project Id
+          type: string
+        section_order:
+          title: Section Order
+          type: integer
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        user_id:
+          title: User Id
+          type: string
+      required:
+      - id
+      - project_id
+      title: SectionSyncView
+      type: object
+    TasksCompletedDateResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ItemSyncView'
+          title: Items
+          type: array
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+      title: TasksCompletedDateResponse
+      type: object
+    TeamProjectConfiguration:
+      properties: {}
+      title: TeamProjectConfiguration
+      type: object
+    Undefined:
+      description: "Undefined object\n\nThe object is used as a default argument in\
+        \ some constructors to differentiate\nfrom `None` which usually means in that\
+        \ context \"reset the value\".\n\n- Use the `parts.util.undefined` singleton\
+        \ for the default variable.\n- Use `is undefined` to see if value is undefined.\n\
+        - For type hints, use `YourType | Undefined`\n\nUsage example:\n\n```\n  \
+        \  from parts.util import Undefined, undefined\n\n    def update_item(\n \
+        \       id: int,\n        title: str | Undefined = undefined,\n        content:\
+        \ str | Undefined = undefined,\n    ):\n        pass\n```"
+      enum:
+      - 0
+      title: Undefined
+      type: integer
+    UploadResult:
+      properties:
+        file_name:
+          title: File Name
+          type: string
+        file_size:
+          title: File Size
+          type: integer
+        file_type:
+          title: File Type
+          type: string
+        file_url:
+          title: File Url
+          type: string
+        image:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image
+        image_height:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Image Height
+        image_width:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Image Width
+        resource_type:
+          title: Resource Type
+          type: string
+        upload_state:
+          default: pending
+          enum:
+          - pending
+          - completed
+          title: Upload State
+          type: string
+      title: UploadResult
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      title: ValidationError
+      type: object
+    WorkspaceInvitationView:
+      properties:
+        id:
+          default: '0'
+          description: The ID of the invitation
+          examples:
+          - '234'
+          title: Id
+          type: string
+        inviter_id:
+          description: ID of the user user who sent the invitation
+          examples:
+          - '1029384756'
+          title: Inviter Id
+          type: string
+        is_existing_user:
+          description: Returns true if the user is already created in the system,
+            and false otherwise
+          readOnly: true
+          title: Is Existing User
+          type: boolean
+        role:
+          $ref: '#/components/schemas/WorkspaceRole'
+        user_email:
+          description: The invited person's email.
+          examples:
+          - foo@example.com
+          title: User Email
+          type: string
+        workspace_id:
+          description: ID of the workspace
+          examples:
+          - '12345'
+          title: Workspace Id
+          type: string
+      required:
+      - id
+      title: WorkspaceInvitationView
+      type: object
+    WorkspaceProjectSyncView:
+      description: 'A representation of a Workspace Project Sync View, extending the
+        base ProjectSync
+
+        View, to be returned to clients in a sync (or sync-like) response.'
+      properties:
+        access:
+          anyOf:
+          - $ref: '#/components/schemas/ProjectAccessView'
+          - type: 'null'
+        can_assign_tasks:
+          title: Can Assign Tasks
+          type: boolean
+        child_order:
+          title: Child Order
+          type: integer
+        collaborator_role_default:
+          title: Collaborator Role Default
+          type: string
+        color:
+          title: Color
+          type: string
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        creator_uid:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Creator Uid
+        default_order:
+          title: Default Order
+          type: integer
+        description:
+          title: Description
+          type: string
+        folder_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Folder Id
+        id:
+          title: Id
+          type: string
+        is_archived:
+          title: Is Archived
+          type: boolean
+        is_collapsed:
+          title: Is Collapsed
+          type: boolean
+        is_deleted:
+          title: Is Deleted
+          type: boolean
+        is_favorite:
+          title: Is Favorite
+          type: boolean
+        is_frozen:
+          title: Is Frozen
+          type: boolean
+        is_invite_only:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Invite Only
+        is_link_sharing_enabled:
+          title: Is Link Sharing Enabled
+          type: boolean
+        is_pending_default_collaborator_invites:
+          title: Is Pending Default Collaborator Invites
+          type: boolean
+        is_shared:
+          title: Is Shared
+          type: boolean
+        name:
+          title: Name
+          type: string
+        public_key:
+          title: Public Key
+          type: string
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        view_style:
+          title: View Style
+          type: string
+        workspace_id:
+          title: Workspace Id
+          type: string
+      required:
+      - id
+      title: WorkspaceProjectSyncView
+      type: object
+    WorkspaceProjectView:
+      properties:
+        _role:
+          anyOf:
+          - $ref: '#/components/schemas/CollaboratorRole'
+          - $ref: '#/components/schemas/Undefined'
+          - type: 'null'
+          default: 0
+          title: Role
+        _v1_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: V1 Id
+        access:
+          anyOf:
+          - $ref: '#/components/schemas/ProjectAccessView'
+          - type: 'null'
+        archived_date:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          title: Archived Date
+        archived_timestamp:
+          default: 0
+          title: Archived Timestamp
+          type: integer
+        color:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          default: 47
+          title: Color
+        default_order:
+          default: 0
+          title: Default Order
+          type: integer
+        description:
+          default: ''
+          title: Description
+          type: string
+        folder_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Folder Id
+        initiated_by_uid:
+          title: Initiated By Uid
+          type: integer
+        is_archived:
+          default: false
+          title: Is Archived
+          type: boolean
+        is_frozen:
+          default: false
+          title: Is Frozen
+          type: boolean
+        is_invite_only:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          default: false
+          title: Is Invite Only
+        name:
+          default: ''
+          title: Name
+          type: string
+        project_id:
+          title: Project Id
+          type: string
+        public_access:
+          title: Public Access
+          type: boolean
+        status:
+          $ref: '#/components/schemas/ProjectStatus'
+          default: IN_PROGRESS
+        view_style:
+          $ref: '#/components/schemas/ProjectViewStyle'
+          default: list
+        workspace_id:
+          title: Workspace Id
+          type: integer
+      required:
+      - project_id
+      title: WorkspaceProjectView
+      type: object
+    WorkspaceRole:
+      description: Role of the user inside the workspace
+      enum:
+      - ADMIN
+      - MEMBER
+      - GUEST
+      title: WorkspaceRole
+      type: string
+    WorkspaceUserView:
+      properties:
+        custom_sorting_applied:
+          default: false
+          title: Custom Sorting Applied
+          type: boolean
+        role:
+          $ref: '#/components/schemas/WorkspaceRole'
+          default: MEMBER
+        user_id:
+          title: User Id
+          type: string
+        workspace_id:
+          title: Workspace Id
+          type: string
+      title: WorkspaceUserView
+      type: object
+    _BackupResponse:
+      properties:
+        url:
+          description: Backup URL
+          examples:
+          - https://api.todoist.com/rest/v2/backups/download?file=12345678901234567890123456789012.zip
+          title: Url
+          type: string
+        version:
+          description: Date and time of the backup version
+          examples:
+          - 2025-02-13 02:03
+          title: Version
+          type: string
+      title: _BackupResponse
+      type: object
+    _EmailResponse:
+      properties:
+        email:
+          title: Email
+          type: string
+      title: _EmailResponse
+      type: object
+    _GetDataV2Response:
+      properties:
+        collaborator_states:
+          items:
+            additionalProperties: true
+            type: object
+          title: Collaborator States
+          type: array
+        collaborators:
+          items:
+            $ref: '#/components/schemas/ExposedCollaboratorSyncView'
+          title: Collaborators
+          type: array
+        folder:
+          anyOf:
+          - $ref: '#/components/schemas/FolderView'
+          - type: 'null'
+        items:
+          items:
+            additionalProperties: true
+            examples:
+            - - added_at: '2016-07-19T12:50:49.000000Z'
+                assigned_by_uid: '2671355'
+                checked: false
+                child_order: 1
+                collapsed: false
+                content: Buy Milk
+                description: ''
+                id: 6XGgfhhFwCC7G4Pc
+                is_deleted: false
+                labels: []
+                notes_count: 1
+                priority: 1
+                project_id: 6XGgff2vcGGQCQvj
+                section_id: '7025'
+                user_id: '2671355'
+            type: object
+          title: Items
+          type: array
+        project:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          examples:
+          - archived_timestamp: 0
+            child_order: 4
+            collapsed: false
+            color: lime_green
+            id: 6XGgff2vcGGQCQvj
+            is_archived: false
+            is_deleted: false
+            name: Shopping List
+            user_id: '2671355'
+            view_style: list
+          title: Project
+        project_notes:
+          items:
+            additionalProperties: true
+            examples:
+            - - content: Things I need to buy
+                id: 6XGgg2HHQPRr9rm7
+                is_deleted: false
+                posted_at: '2019-11-06T09:37:28.000000Z'
+                posted_uid: '2671355'
+                project_id: 6XGgff2vcGGQCQvj
+                uids_to_notify: []
+            type: object
+          title: Project Notes
+          type: array
+        sections:
+          items:
+            additionalProperties: true
+            examples:
+            - - added_at: '2019-11-06T09:37:08.000000Z'
+                collapsed: false
+                id: '7025'
+                is_archived: false
+                is_deleted: false
+                name: Groceries
+                project_id: 6XGgff2vcGGQCQvj
+                section_order: 1
+                user_id: '2671355'
+            type: object
+          title: Sections
+          type: array
+        subprojects:
+          items:
+            additionalProperties: true
+            examples:
+            - archived_timestamp: 0
+              child_order: 4
+              collapsed: false
+              color: lime_green
+              id: 6XGgfvm7fMGJhwgm
+              is_archived: false
+              is_deleted: false
+              name: Shop name
+              parent_id: 6XGgff2vcGGQCQvj
+              user_id: '2671355'
+              view_style: list
+            type: object
+          title: Subprojects
+          type: array
+      title: _GetDataV2Response
+      type: object
+    _MigratePersonalTokenResponse:
+      properties:
+        access_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          examples:
+          - 0123456789abcdef0123456789abcdef01234567
+          title: Access Token
+        token_type:
+          const: Bearer
+          title: Token Type
+          type: string
+      title: _MigratePersonalTokenResponse
+      type: object
+    _PlanDetailsResponse:
+      properties:
+        cancel_at_period_end:
+          title: Cancel At Period End
+          type: boolean
+        current_active_projects:
+          title: Current Active Projects
+          type: integer
+        current_member_count:
+          title: Current Member Count
+          type: integer
+        current_plan:
+          enum:
+          - Business
+          - Starter
+          title: Current Plan
+          type: string
+        current_plan_status:
+          enum:
+          - Active
+          - Downgraded
+          - Cancelled
+          - NeverSubscribed
+          title: Current Plan Status
+          type: string
+        downgrade_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Downgrade At
+        has_billing_portal:
+          title: Has Billing Portal
+          type: boolean
+        has_billing_portal_switch_to_annual:
+          title: Has Billing Portal Switch To Annual
+          type: boolean
+        has_trialed:
+          title: Has Trialed
+          type: boolean
+        is_trialing:
+          title: Is Trialing
+          type: boolean
+        maximum_active_projects:
+          title: Maximum Active Projects
+          type: integer
+        plan_price:
+          anyOf:
+          - $ref: '#/components/schemas/PlanPrice'
+          - type: 'null'
+        price_list:
+          items:
+            $ref: '#/components/schemas/FormattedPriceListing'
+          title: Price List
+          type: array
+        trial_ends_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trial Ends At
+        workspace_id:
+          title: Workspace Id
+          type: integer
+      title: _PlanDetailsResponse
+      type: object
+    _ProjectsResponse:
+      properties:
+        has_more:
+          title: Has More
+          type: boolean
+        next_cursor:
+          title: Next Cursor
+          type: string
+        workspace_projects:
+          items:
+            $ref: '#/components/schemas/WorkspaceProjectView'
+          title: Workspace Projects
+          type: array
+      title: _ProjectsResponse
+      type: object
+    _StatusOkResponse:
+      properties:
+        status:
+          const: ok
+          title: Status
+          type: string
+      title: _StatusOkResponse
+      type: object
+    _UsersResponse:
+      properties:
+        has_more:
+          title: Has More
+          type: boolean
+        next_cursor:
+          title: Next Cursor
+          type: string
+        workspace_users:
+          items:
+            $ref: '#/components/schemas/MemberView'
+          title: Workspace Users
+          type: array
+      title: _UsersResponse
+      type: object
+    todoist__apps__api__rest__comments__Body__1:
+      properties:
+        attachment:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Attachment
+        content:
+          maxLength: 15000
+          minLength: 1
+          title: Content
+          type: string
+        project_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          - type: 'null'
+          description: String ID of the project
+          examples:
+          - 6XGgm6PHrGgMpCFX
+          title: Project Id
+        task_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          - type: 'null'
+          description: String ID of the task
+          examples:
+          - 6XGgmFVcrG5RRjVr
+          title: Task Id
+        uids_to_notify:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Uids To Notify
+      required:
+      - content
+      - project_id
+      title: Body
+      type: object
+    todoist__apps__api__rest__comments__Body__2:
+      properties:
+        content:
+          anyOf:
+          - maxLength: 15000
+            minLength: 1
+            type: string
+          - type: 'null'
+          title: Content
+      required:
+      - content
+      title: Body
+      type: object
+    todoist__apps__api__rest__labels__Body__1:
+      properties:
+        name:
+          title: Name
+          type: string
+      title: Body
+      type: object
+    todoist__apps__api__rest__labels__Body__2:
+      properties:
+        name:
+          title: Name
+          type: string
+        new_name:
+          title: New Name
+          type: string
+      title: Body
+      type: object
+    todoist__apps__api__rest__labels__Body__3:
+      properties:
+        color:
+          anyOf:
+          - enum:
+            - berry_red
+            - red
+            - orange
+            - yellow
+            - olive_green
+            - lime_green
+            - green
+            - mint_green
+            - teal
+            - sky_blue
+            - light_blue
+            - blue
+            - grape
+            - violet
+            - lavender
+            - magenta
+            - salmon
+            - charcoal
+            - grey
+            - taupe
+            type: string
+          - enum:
+            - 30
+            - 31
+            - 32
+            - 33
+            - 34
+            - 35
+            - 36
+            - 37
+            - 38
+            - 39
+            - 40
+            - 41
+            - 42
+            - 43
+            - 44
+            - 45
+            - 46
+            - 47
+            - 48
+            - 49
+            type: integer
+          - type: 'null'
+        is_favorite:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Favorite
+        name:
+          anyOf:
+          - maxLength: 128
+            type: string
+          - type: 'null'
+          title: Name
+        order:
+          anyOf:
+          - maximum: 32767
+            minimum: -32768
+            type: integer
+          - type: 'null'
+          title: Order
+      title: Body
+      type: object
+    todoist__apps__api__rest__labels__Body__4:
+      properties:
+        color:
+          anyOf:
+          - enum:
+            - berry_red
+            - red
+            - orange
+            - yellow
+            - olive_green
+            - lime_green
+            - green
+            - mint_green
+            - teal
+            - sky_blue
+            - light_blue
+            - blue
+            - grape
+            - violet
+            - lavender
+            - magenta
+            - salmon
+            - charcoal
+            - grey
+            - taupe
+            type: string
+          - enum:
+            - 30
+            - 31
+            - 32
+            - 33
+            - 34
+            - 35
+            - 36
+            - 37
+            - 38
+            - 39
+            - 40
+            - 41
+            - 42
+            - 43
+            - 44
+            - 45
+            - 46
+            - 47
+            - 48
+            - 49
+            type: integer
+          default:
+            database_index: 47
+            hex: '#808080'
+            name: charcoal
+        is_favorite:
+          default: false
+          title: Is Favorite
+          type: boolean
+        name:
+          maxLength: 128
+          title: Name
+          type: string
+        order:
+          anyOf:
+          - maximum: 32767
+            minimum: -32768
+            type: integer
+          - type: 'null'
+          title: Order
+      title: Body
+      type: object
+    todoist__apps__api__rest__projects__Body__1:
+      properties:
+        color:
+          anyOf:
+          - enum:
+            - berry_red
+            - red
+            - orange
+            - yellow
+            - olive_green
+            - lime_green
+            - green
+            - mint_green
+            - teal
+            - sky_blue
+            - light_blue
+            - blue
+            - grape
+            - violet
+            - lavender
+            - magenta
+            - salmon
+            - charcoal
+            - grey
+            - taupe
+            type: string
+          - enum:
+            - 30
+            - 31
+            - 32
+            - 33
+            - 34
+            - 35
+            - 36
+            - 37
+            - 38
+            - 39
+            - 40
+            - 41
+            - 42
+            - 43
+            - 44
+            - 45
+            - 46
+            - 47
+            - 48
+            - 49
+            type: integer
+          default:
+            database_index: 47
+            hex: '#808080'
+            name: charcoal
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_favorite:
+          default: false
+          title: Is Favorite
+          type: boolean
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        parent_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          - type: 'null'
+          title: Parent Id
+        view_style:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: View Style
+      title: Body
+      type: object
+    todoist__apps__api__rest__projects__Body__2:
+      properties:
+        color:
+          anyOf:
+          - enum:
+            - berry_red
+            - red
+            - orange
+            - yellow
+            - olive_green
+            - lime_green
+            - green
+            - mint_green
+            - teal
+            - sky_blue
+            - light_blue
+            - blue
+            - grape
+            - violet
+            - lavender
+            - magenta
+            - salmon
+            - charcoal
+            - grey
+            - taupe
+            type: string
+          - enum:
+            - 30
+            - 31
+            - 32
+            - 33
+            - 34
+            - 35
+            - 36
+            - 37
+            - 38
+            - 39
+            - 40
+            - 41
+            - 42
+            - 43
+            - 44
+            - 45
+            - 46
+            - 47
+            - 48
+            - 49
+            type: integer
+          - type: 'null'
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        is_favorite:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Favorite
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        view_style:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: View Style
+      title: Body
+      type: object
+    todoist__apps__api__rest__sections__Body__1:
+      properties:
+        name:
+          title: Name
+          type: string
+        order:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Order
+        project_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          title: Project Id
+      required:
+      - project_id
+      title: Body
+      type: object
+    todoist__apps__api__rest__sections__Body__2:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+      title: Body
+      type: object
+    todoist__apps__api__rest__tasks__Body__1:
+      properties:
+        assignee_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Assignee Id
+        content:
+          minLength: 1
+          title: Content
+          type: string
+        deadline_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deadline Date
+        deadline_lang:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deadline Lang
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        due_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Due Date
+        due_datetime:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Due Datetime
+        due_lang:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Due Lang
+        due_string:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Due String
+        duration:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration
+        duration_unit:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Duration Unit
+        labels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Labels
+        order:
+          anyOf:
+          - maximum: 2147483647
+            minimum: -2147483648
+            type: integer
+          - type: 'null'
+          title: Order
+        parent_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          - type: 'null'
+          title: Parent Id
+        priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Priority
+        project_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          - type: 'null'
+          title: Project Id
+        section_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          - type: 'null'
+          title: Section Id
+      required:
+      - content
+      - project_id
+      title: Body
+      type: object
+    todoist__apps__api__rest__tasks__Body__2:
+      properties:
+        parent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Id
+        project_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Project Id
+        section_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Section Id
+      title: Body
+      type: object
+    todoist__apps__api__rest__tasks__Body__3:
+      properties:
+        assignee_id:
+          anyOf:
+          - type: integer
+          - $ref: '#/components/schemas/Undefined'
+          - type: 'null'
+          default: 0
+          title: Assignee Id
+        content:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          default: 0
+          title: Content
+        deadline_date:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          - type: 'null'
+          default: 0
+          title: Deadline Date
+        deadline_lang:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          - type: 'null'
+          default: 0
+          title: Deadline Lang
+        description:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          default: 0
+          title: Description
+        due_date:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          default: 0
+          title: Due Date
+        due_datetime:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          default: 0
+          title: Due Datetime
+        due_lang:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          default: 0
+          title: Due Lang
+        due_string:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          default: 0
+          title: Due String
+        duration:
+          anyOf:
+          - type: integer
+          - $ref: '#/components/schemas/Undefined'
+          - type: 'null'
+          default: 0
+          title: Duration
+        duration_unit:
+          anyOf:
+          - type: string
+          - $ref: '#/components/schemas/Undefined'
+          - type: 'null'
+          default: 0
+          title: Duration Unit
+        labels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - $ref: '#/components/schemas/Undefined'
+          default: 0
+          title: Labels
+        priority:
+          anyOf:
+          - type: integer
+          - $ref: '#/components/schemas/Undefined'
+          default: 0
+          title: Priority
+      title: Body
+      type: object
+    todoist__apps__api__sync__rest__controller__Body__1:
+      properties:
+        dont_notify:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dont Notify
+        notification_type:
+          $ref: '#/components/schemas/NotificationType'
+        service:
+          $ref: '#/components/schemas/NotificationChannel'
+        token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token
+      title: Body
+      type: object
+    todoist__apps__api__sync__rest__controller__Body__2:
+      properties:
+        file_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File Name
+      title: Body
+      type: object
+    todoist__apps__api__sync__rest__import_export__Body:
+      properties:
+        obj_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          title: Obj Id
+        obj_type:
+          $ref: '#/components/schemas/EmailObjectType'
+      title: Body
+      type: object
+    todoist__apps__api__sync__rest__quick__Body:
+      properties:
+        auto_reminder:
+          default: false
+          description: When this option is enabled, the default reminder will be added
+            to the new item if it has a due date with time set. See also the [auto_reminder
+            user option](#tag/Sync/User) for more info about the default reminder.
+          title: Auto Reminder
+          type: boolean
+        meta:
+          default: false
+          title: Meta
+          type: boolean
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+        reminder:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The reminder date in free form text.
+          title: Reminder
+        text:
+          description: The text of the task that is parsed. It can include a due date
+            in free form text, a project name starting with the `#` character (without
+            spaces), a label starting with the `@` character, an assignee starting
+            with the `+` character, a priority (e.g., `p1`), a deadline between `{}`
+            (e.g. {in 3 days}), or a description starting from `//` until the end
+            of the text.
+          title: Text
+          type: string
+      title: Body
+      type: object
+    todoist__apps__api__sync__rest__workspaces__Body__1:
+      properties:
+        user_email:
+          title: User Email
+          type: string
+        workspace_id:
+          title: Workspace Id
+          type: integer
+      title: Body
+      type: object
+    todoist__apps__api__sync__rest__workspaces__Body__2:
+      properties:
+        invite_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invite Code
+        workspace_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Workspace Id
+      title: Body
+      type: object
+    todoist__apps__app_platform__controllers__access_token__Body:
+      properties:
+        client_id:
+          description: The unique Client ID of the Todoist application that you registered
+          title: Client Id
+          type: string
+        client_secret:
+          description: The unique Client Secret of the Todoist application that you
+            registered
+          title: Client Secret
+          type: string
+        personal_token:
+          description: Token obtained from the email/password authentication
+          title: Personal Token
+          type: string
+        scope:
+          description: Scopes of the OAuth token. Please refer to the [Authorization](#tag/Authorization)
+            guide for the detailed list of available scopes.
+          title: Scope
+          type: string
+      title: Body
+      type: object
+    todoist__apps__import_export__controllers__rest__Body:
+      properties:
+        locale:
+          default: en
+          title: Locale
+          type: string
+        project_id:
+          anyOf:
+          - type: string
+          - exclusiveMaximum: 99999999999
+            exclusiveMinimum: 0
+            type: integer
+          title: Project Id
+        template_id:
+          title: Template Id
+          type: string
+      required:
+      - project_id
+      title: Body
+      type: object
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      name: Authorization
+      in: header
